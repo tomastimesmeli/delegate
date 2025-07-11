@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado Libre - Delegación Logística</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for QR icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .screen-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+            position: relative; /* Needed for floating button */
+        }
+        .header {
+            width: 100%;
+            padding: 16px;
+            background-color: #ffe600; /* Mercado Libre yellow */
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: #333;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+            border: 1px solid #e0e0e0; /* Added border for card separation */
+        }
+        .btn-primary {
+            background-color: #3483fa; /* Mercado Libre blue */
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #2968c8;
+        }
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 24px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #3483fa;
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #3483fa;
+        }
+        input:checked + .slider:before {
+            -webkit-transform: translateX(16px);
+            -ms-transform: translateX(16px);
+            transform: translateX(16px);
+        }
+        .fab {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3483fa;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 10;
+        }
+        /* Styles for the "Palabra Clave" display */
+        .palabra-clave-box {
+            background-color: #f5f5f5; /* Light grey background */
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            display: inline-block; /* To make it fit content */
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+        .palabra-clave-label {
+            font-size: 0.875rem; /* Smaller label */
+            color: #666;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col items-center">
+
+    <!-- Pepe - Crear Delegado Screen -->
+    <div class="screen-container w-full max-w-md mb-8">
+        <div class="header">Pepe - Delegar Acceso Logístico</div>
+        <div class="p-4 w-full">
+            <h2 class="text-lg font-semibold mb-4">Mis Delegados Actuales</h2>
+            <div class="card flex justify-between items-center mb-3">
+                <div>
+                    <p class="font-medium">Maria (Esposa)</p>
+                    <p class="text-sm text-gray-600">Rol: Completo | Alcance: Hogar</p>
+                </div>
+                <button class="text-red-500 text-sm">Revocar</button>
+            </div>
+            <div class="card flex justify-between items-center mb-3">
+                <div>
+                    <p class="font-medium">Pepito (Hijo)</p>
+                    <p class="text-sm text-gray-600">Rol: Recibir | Alcance: Hogar</p>
+                </div>
+                <button class="text-red-500 text-sm">Revocar</button>
+            </div>
+            <div class="card flex justify-between items-center mb-6">
+                <div>
+                    <p class="font-medium">Mateo (Portero)</p>
+                    <p class="text-sm text-gray-600">Rol: Recibir | Alcance: Hogar</p>
+                </div>
+                <button class="text-red-500 text-sm">Revocar</button>
+            </div>
+
+            <button class="btn-primary w-full mb-6" onclick="document.getElementById('addDelegateModal').classList.remove('hidden')">
+                + Agregar Delegado
+            </button>
+
+            <!-- Add Delegate Modal/Form -->
+            <div id="addDelegateModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+                <div class="bg-white rounded-lg p-6 w-full max-w-md">
+                    <h3 class="text-xl font-bold mb-4">Agregar Nuevo Delegado</h3>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="delegateName">
+                            Nombre del Delegado
+                        </label>
+                        <input type="text" id="delegateName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej: Juan Pérez">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="delegateContact">
+                            Teléfono o Email
+                        </label>
+                        <input type="text" id="delegateContact" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej: 11 1234 5678 o juan@email.com">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Rol del Delegado</label>
+                        <div class="flex items-center mb-2">
+                            <input type="checkbox" id="roleReceive" class="mr-2">
+                            <label for="roleReceive">Puede Recibir Paquetes</label>
+                        </div>
+                        <div class="flex items-center mb-2">
+                            <input type="checkbox" id="roleDispatch" class="mr-2">
+                            <label for="roleDispatch">Puede Despachar Devoluciones</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="roleNotify" class="mr-2">
+                            <label for="roleNotify">Recibe Notificaciones de Envío</label>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Alcance</label>
+                        <select class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option>Todos mis paquetes</option>
+                            <option>Solo hogar (Dirección principal)</option>
+                            <option>Solo oficina (Dirección de trabajo)</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Duración del Acceso</label>
+                        <select class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option>Hasta nuevo aviso (Permanente)</option>
+                            <option>Una vez (Link caduca tras primer uso)</option>
+                            <option>Hasta el 31/12/2025</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Seguridad del Link</label>
+                        <select class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option>Ligado a 1 dispositivo (más seguro)</option>
+                            <option>Ligado al nº de teléfono (requiere OTP inicial)</option>
+                            <option>Compartible (trazable, con alertas opcionales)</option>
+                        </select>
+                    </div>
+
+                    <!-- Gemini API Integration: Driver Notes Optimization -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="driverNotes">
+                            Notas para el Chofer (Opcional)
+                        </label>
+                        <textarea id="driverNotes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24" placeholder="Ej: El timbre no funciona, llamar a Mateo."></textarea>
+                        <button id="optimizeNotesBtn" class="btn-secondary w-full mt-2 flex items-center justify-center">
+                            ✨ Optimizar Notas
+                            <span id="optimizeNotesLoading" class="ml-2 hidden">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
+                        <div id="optimizedNotesDisplay" class="mt-2 p-2 bg-gray-100 rounded text-sm text-gray-800 hidden">
+                            <!-- Optimized notes will be displayed here -->
+                        </div>
+                    </div>
+                    <!-- End Gemini API Integration -->
+
+                    <div class="flex justify-end gap-3">
+                        <button class="btn-secondary" onclick="document.getElementById('addDelegateModal').classList.add('hidden')">Cancelar</button>
+                        <button class="btn-primary">Generar Link</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pepa - Módulo en la App Screen -->
+    <div class="screen-container w-full max-w-md mb-8">
+        <div class="header">Pepa - Mis Paquetes y los de Pepe</div>
+        <div class="p-4 w-full">
+            <div class="flex justify-around border-b border-gray-200 mb-4">
+                <button class="py-2 px-4 text-blue-600 border-b-2 border-blue-600 font-medium">PENDIENTES</button>
+                <button class="py-2 px-4 text-gray-600 font-medium">HISTORIAL</button>
+            </div>
+
+            <h3 class="text-lg font-semibold mb-3">Entregas para hoy (2)</h3>
+
+            <!-- Package Card for Pepa -->
+            <div class="card mb-4">
+                <div class="flex items-center mb-2">
+                    <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-box text-gray-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">Paquete #ML123456789</p>
+                        <p class="text-sm text-gray-600">Para: Pepa</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-700 mb-2">Llega hoy entre 14:00 y 16:00 hs</p>
+                <div class="palabra-clave-box">
+                    <span class="palabra-clave-label">Palabra Clave:</span> <span class="text-xl font-bold">456789</span>
+                </div>
+            </div>
+
+            <!-- Package Card for Pepe (delegated) -->
+            <div class="card mb-4">
+                <div class="flex items-center mb-2">
+                    <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-box text-gray-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">Paquete #ML987654321</p>
+                        <p class="text-sm text-gray-600">Para: Pepe (Delegado)</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-700 mb-2">Llega hoy antes de las 18:00 hs</p>
+                <div class="palabra-clave-box">
+                    <span class="palabra-clave-label">Palabra Clave:</span> <span class="text-xl font-bold">123456</span>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-semibold mb-3 mt-6">Entregas para mañana (1)</h3>
+            <div class="card mb-4">
+                <div class="flex items-center mb-2">
+                    <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-box text-gray-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">Paquete #ML00112233</p>
+                        <p class="text-sm text-gray-600">Para: Pepa</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-700 mb-2">Llega mañana entre 09:00 y 12:00 hs</p>
+                <div class="palabra-clave-box">
+                    <span class="palabra-clave-label">Palabra Clave:</span> <span class="text-xl font-bold">789012</span>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-semibold mb-3 mt-6">Devoluciones pendientes (1)</h3>
+            <div class="card mb-4">
+                <div class="flex items-center mb-2">
+                    <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-undo text-gray-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">Devolución #DEV12345</p>
+                        <p class="text-sm text-gray-600">De: Pepe (Delegado)</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-700 mb-3">Recogida programada: Mañana 10:00 hs</p>
+                <button class="btn-primary w-full">Mostrar QR para Despacho</button>
+            </div>
+
+            <div class="mt-6 p-4 bg-blue-50 rounded-lg text-blue-800 text-sm">
+                <p class="font-semibold">¿Necesitas ayuda?</p>
+                <p>Contacta a soporte si tienes problemas con una entrega o devolución.</p>
+            </div>
+        </div>
+        <!-- Floating QR Scan Button -->
+        <div class="fab" onclick="document.getElementById('qrScannerScreen').classList.remove('hidden')">
+            <i class="fas fa-qrcode"></i>
+        </div>
+    </div>
+
+    <!-- Mateo - Web PWA (permanent link) Screen -->
+    <div class="screen-container w-full max-w-md mb-8">
+        <div class="header">Mateo - Paquetes para Recibir</div>
+        <div class="p-4 w-full">
+            <div class="flex justify-around border-b border-gray-200 mb-4">
+                <button class="py-2 px-4 text-blue-600 border-b-2 border-blue-600 font-medium">PENDIENTES</button>
+                <button class="py-2 px-4 text-gray-600 font-medium">HISTORIAL</button>
+            </div>
+
+            <h3 class="text-lg font-semibold mb-3">Entregas En Camino (1)</h3>
+            
+            <!-- Package Card for Mateo - En Camino (prioritized) -->
+            <div class="card mb-3">
+                <div class="flex items-center mb-2">
+                    <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-box text-gray-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">Dpto. 203 - Paquete #ML445566</p>
+                        <p class="text-sm text-gray-600">Para: Sr. Carlos Ruiz</p>
+                    </div>
+                </div>
+                <p class="text-sm text-orange-600 font-semibold mb-2">En Camino</p>
+                <div class="palabra-clave-box">
+                    <span class="palabra-clave-label">Palabra Clave:</span> <span class="text-xl font-bold">987654</span>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-semibold mb-3 mt-6">Entregas para hoy (2)</h3>
+
+            <!-- Package Card for Mateo - Llega Hoy -->
+            <div class="card mb-3">
+                <div class="flex items-center mb-2">
+                    <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-box text-gray-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">Dpto. 101 - Paquete #ML112233</p>
+                        <p class="text-sm text-gray-600">Para: Sra. Ana Gómez</p>
+                    </div>
+                </div>
+                <p class="text-sm text-green-600 font-semibold mb-2">Llega Hoy</p>
+                <div class="palabra-clave-box">
+                    <span class="palabra-clave-label">Palabra Clave:</span> <span class="text-xl font-bold">654321</span>
+                </div>
+            </div>
+
+            <div class="card mb-6">
+                <div class="flex items-center mb-2">
+                    <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-box text-gray-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">Dpto. 305 - Paquete #ML778899</p>
+                        <p class="text-sm text-gray-600">Para: Familia Fernández</p>
+                    </div>
+                </div>
+                <p class="text-sm text-green-600 font-semibold mb-2">Llega Hoy</p>
+                <div class="palabra-clave-box">
+                    <span class="palabra-clave-label">Palabra Clave:</span> <span class="text-xl font-bold">321098</span>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-semibold mb-4">Contactos Delegados</h3>
+            <div class="card mb-3">
+                <p class="font-medium">Sra. Ana Gómez (Dpto. 101)</p>
+                <div class="flex gap-2 mt-2">
+                    <button class="btn-secondary flex-1">Llamar</button>
+                    <button class="btn-secondary flex-1">WhatsApp</button>
+                </div>
+            </div>
+            <div class="card mb-6">
+                <p class="font-medium">Sr. Carlos Ruiz (Dpto. 203)</p>
+                <div class="flex gap-2 mt-2">
+                    <button class="btn-secondary flex-1">Llamar</button>
+                    <button class="btn-secondary flex-1">WhatsApp</button>
+                </div>
+            </div>
+        </div>
+        <!-- Floating QR Scan Button -->
+        <div class="fab" onclick="document.getElementById('qrScannerScreen').classList.remove('hidden')">
+            <i class="fas fa-qrcode"></i>
+        </div>
+    </div>
+
+    <!-- QR Scanner / PIN Entry Screen (Moved to the end for clarity, but conceptually accessed from FAB) -->
+    <div id="qrScannerScreen" class="screen-container w-full max-w-md hidden">
+        <div class="header">Escanear QR / Ingresar PIN</div>
+        <div class="p-4 w-full flex flex-col items-center">
+            <div class="w-full bg-gray-200 rounded-lg h-48 flex items-center justify-center mb-6 text-gray-500 text-center">
+                <p>Apunte la cámara al QR del chofer</p>
+            </div>
+
+            <div class="w-full text-center mb-6">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="togglePinInput">
+                    <span class="slider round"></span>
+                </label>
+                <span class="ml-3 text-gray-700">Ingresar PIN manualmente</span>
+            </div>
+
+            <div id="pinInputSection" class="w-full hidden mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="pinCode">
+                    PIN de 6 dígitos
+                </label>
+                <input type="text" id="pinCode" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center text-xl font-bold tracking-widest" maxlength="6" placeholder="------">
+            </div>
+            
+            <button class="btn-primary w-full mb-4">Confirmar Entrega</button>
+            <a href="#" class="text-blue-600 text-sm">Ayuda / Preguntas Frecuentes</a>
+        </div>
+    </div>
+
+    <script>
+        // Toggle PIN input visibility
+        document.getElementById('togglePinInput').addEventListener('change', function() {
+            const pinInputSection = document.getElementById('pinInputSection');
+            if (this.checked) {
+                pinInputSection.classList.remove('hidden');
+            } else {
+                pinInputSection.classList.add('hidden');
+            }
+        });
+
+        // Gemini API Integration for Notes Optimization
+        document.getElementById('optimizeNotesBtn').addEventListener('click', async function() {
+            const driverNotes = document.getElementById('driverNotes').value;
+            const optimizedNotesDisplay = document.getElementById('optimizedNotesDisplay');
+            const loadingIndicator = document.getElementById('optimizeNotesLoading');
+
+            if (!driverNotes.trim()) {
+                optimizedNotesDisplay.textContent = 'Por favor, ingresa algunas notas para optimizar.';
+                optimizedNotesDisplay.classList.remove('hidden');
+                return;
+            }
+
+            loadingIndicator.classList.remove('hidden');
+            optimizedNotesDisplay.classList.add('hidden');
+            optimizedNotesDisplay.textContent = ''; // Clear previous content
+
+            try {
+                const prompt = `Optimiza las siguientes notas para un chofer de entrega. Conviértelas en instrucciones claras y concisas, extrayendo los puntos más importantes y presentándolos de forma fácil de leer (ej. en viñetas). Si hay información redundante o poco clara, mejórala.
+
+Notas:
+${driverNotes}`;
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Leave this as-is. Canvas will provide it at runtime.
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    optimizedNotesDisplay.textContent = text;
+                    optimizedNotesDisplay.classList.remove('hidden');
+                } else {
+                    optimizedNotesDisplay.textContent = 'No se pudo optimizar las notas. Intenta de nuevo.';
+                    optimizedNotesDisplay.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                optimizedNotesDisplay.textContent = 'Ocurrió un error al optimizar las notas. Por favor, inténtalo más tarde.';
+                optimizedNotesDisplay.classList.remove('hidden');
+            } finally {
+                loadingIndicator.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
