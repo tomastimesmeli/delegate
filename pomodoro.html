@@ -54,15 +54,20 @@
             font-size: 72px;
             font-weight: 300;
             color: #333;
-            margin: 30px 0;
+            margin: 40px 0;
             font-family: 'Courier New', monospace;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
         }
 
         .progress-ring {
             position: relative;
             width: 200px;
             height: 200px;
-            margin: 20px auto;
+            margin: 40px auto 50px auto;
         }
 
         .progress-ring svg {
@@ -90,7 +95,8 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin: 30px 0;
+            margin: 40px 0;
+            padding-top: 20px;
         }
 
         .btn {
