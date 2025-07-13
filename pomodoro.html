@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Focus Timer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .session-type {
+            font-size: 18px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .timer-display {
+            font-size: 72px;
+            font-weight: 300;
+            color: #333;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+        }
+
+        .progress-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+
+        .progress-ring .progress-bg {
+            stroke: #e0e0e0;
+        }
+
+        .progress-ring .progress-bar {
+            stroke: #667eea;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .settings {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 15px;
+        }
+
+        .settings h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .setting-item label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .setting-item input {
+            width: 60px;
+            padding: 5px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #667eea;
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .mode-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .mode-work {
+            background: #e53e3e;
+        }
+
+        .mode-break {
+            background: #38a169;
+        }
+
+        .mode-long-break {
+            background: #3182ce;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .timer-display {
+                font-size: 48px;
+            }
+            
+            .progress-ring {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🍅 Pomodoro Focus</h1>
+            <div class="session-type">
+                <span class="mode-indicator mode-work"></span>
+                <span id="sessionType">Work Session</span>
+            </div>
+        </div>
+
+        <div class="progress-ring">
+            <svg>
+                <circle class="progress-bg" cx="100" cy="100" r="90"></circle>
+                <circle class="progress-bar" cx="100" cy="100" r="90" id="progressCircle"></circle>
+            </svg>
+            <div class="timer-display" id="timerDisplay">25:00</div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn">Start</button>
+            <button class="btn btn-secondary" id="pauseBtn" disabled>Pause</button>
+            <button class="btn btn-secondary" id="resetBtn">Reset</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="completedSessions">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="currentStreak">0</div>
+                <div class="stat-label">Current Streak</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalTime">0h</div>
+                <div class="stat-label">Total Time</div>
+            </div>
+        </div>
+
+        <div class="settings">
+            <h3>Settings</h3>
+            <div class="setting-item">
+                <label for="workDuration">Work Duration (min):</label>
+                <input type="number" id="workDuration" value="25" min="1" max="60">
+            </div>
+            <div class="setting-item">
+                <label for="breakDuration">Short Break (min):</label>
+                <input type="number" id="breakDuration" value="5" min="1" max="30">
+            </div>
+            <div class="setting-item">
+                <label for="longBreakDuration">Long Break (min):</label>
+                <input type="number" id="longBreakDuration" value="15" min="1" max="60">
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        class PomodoroTimer {
+            constructor() {
+                this.workDuration = 25 * 60; // 25 minutes in seconds
+                this.breakDuration = 5 * 60; // 5 minutes in seconds
+                this.longBreakDuration = 15 * 60; // 15 minutes in seconds
+                
+                this.currentTime = this.workDuration;
+                this.isRunning = false;
+                this.isWorkSession = true;
+                this.completedSessions = 0;
+                this.currentStreak = 0;
+                this.totalTimeWorked = 0;
+                
+                this.timer = null;
+                this.initialTime = this.workDuration;
+                
+                this.initializeElements();
+                this.setupEventListeners();
+                this.loadSettings();
+                this.updateDisplay();
+                this.updateProgressRing();
+            }
+
+            initializeElements() {
+                this.timerDisplay = document.getElementById('timerDisplay');
+                this.startBtn = document.getElementById('startBtn');
+                this.pauseBtn = document.getElementById('pauseBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.sessionType = document.getElementById('sessionType');
+                this.progressCircle = document.getElementById('progressCircle');
+                this.notification = document.getElementById('notification');
+                
+                this.completedSessionsEl = document.getElementById('completedSessions');
+                this.currentStreakEl = document.getElementById('currentStreak');
+                this.totalTimeEl = document.getElementById('totalTime');
+                
+                this.workDurationInput = document.getElementById('workDuration');
+                this.breakDurationInput = document.getElementById('breakDuration');
+                this.longBreakDurationInput = document.getElementById('longBreakDuration');
+                
+                // Setup progress ring
+                const circumference = 2 * Math.PI * 90;
+                this.progressCircle.style.strokeDasharray = circumference;
+                this.progressCircle.style.strokeDashoffset = circumference;
+            }
+
+            setupEventListeners() {
+                this.startBtn.addEventListener('click', () => this.start());
+                this.pauseBtn.addEventListener('click', () => this.pause());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                
+                this.workDurationInput.addEventListener('change', () => this.updateSettings());
+                this.breakDurationInput.addEventListener('change', () => this.updateSettings());
+                this.longBreakDurationInput.addEventListener('change', () => this.updateSettings());
+            }
+
+            updateSettings() {
+                this.workDuration = parseInt(this.workDurationInput.value) * 60;
+                this.breakDuration = parseInt(this.breakDurationInput.value) * 60;
+                this.longBreakDuration = parseInt(this.longBreakDurationInput.value) * 60;
+                
+                if (!this.isRunning) {
+                    this.currentTime = this.isWorkSession ? this.workDuration : 
+                                     (this.completedSessions % 4 === 3 ? this.longBreakDuration : this.breakDuration);
+                    this.initialTime = this.currentTime;
+                    this.updateDisplay();
+                    this.updateProgressRing();
+                }
+                
+                this.saveSettings();
+            }
+
+            saveSettings() {
+                localStorage.setItem('pomodoroSettings', JSON.stringify({
+                    workDuration: this.workDuration,
+                    breakDuration: this.breakDuration,
+                    longBreakDuration: this.longBreakDuration,
+                    completedSessions: this.completedSessions,
+                    currentStreak: this.currentStreak,
+                    totalTimeWorked: this.totalTimeWorked
+                }));
+            }
+
+            loadSettings() {
+                const saved = localStorage.getItem('pomodoroSettings');
+                if (saved) {
+                    const settings = JSON.parse(saved);
+                    this.workDuration = settings.workDuration || this.workDuration;
+                    this.breakDuration = settings.breakDuration || this.breakDuration;
+                    this.longBreakDuration = settings.longBreakDuration || this.longBreakDuration;
+                    this.completedSessions = settings.completedSessions || 0;
+                    this.currentStreak = settings.currentStreak || 0;
+                    this.totalTimeWorked = settings.totalTimeWorked || 0;
+                    
+                    this.workDurationInput.value = this.workDuration / 60;
+                    this.breakDurationInput.value = this.breakDuration / 60;
+                    this.longBreakDurationInput.value = this.longBreakDuration / 60;
+                    
+                    this.currentTime = this.workDuration;
+                    this.initialTime = this.workDuration;
+                    this.updateStats();
+                }
+            }
+
+            start() {
+                if (!this.isRunning) {
+                    this.isRunning = true;
+                    this.startBtn.disabled = true;
+                    this.pauseBtn.disabled = false;
+                    
+                    this.timer = setInterval(() => {
+                        this.currentTime--;
+                        this.updateDisplay();
+                        this.updateProgressRing();
+                        
+                        if (this.currentTime <= 0) {
+                            this.completeSession();
+                        }
+                    }, 1000);
+                }
+            }
+
+            pause() {
+                if (this.isRunning) {
+                    this.isRunning = false;
+                    this.startBtn.disabled = false;
+                    this.pauseBtn.disabled = true;
+                    clearInterval(this.timer);
+                }
+            }
+
+            reset() {
+                this.pause();
+                this.currentTime = this.isWorkSession ? this.workDuration : 
+                                 (this.completedSessions % 4 === 3 ? this.longBreakDuration : this.breakDuration);
+                this.initialTime = this.currentTime;
+                this.updateDisplay();
+                this.updateProgressRing();
+            }
+
+            completeSession() {
+                this.pause();
+                this.playNotificationSound();
+                
+                if (this.isWorkSession) {
+                    this.completedSessions++;
+                    this.currentStreak++;
+                    this.totalTimeWorked += this.workDuration;
+                    
+                    // Check if it's time for long break
+                    if (this.completedSessions % 4 === 0) {
+                        this.switchToLongBreak();
+                    } else {
+                        this.switchToBreak();
+                    }
+                } else {
+                    this.switchToWork();
+                }
+                
+                this.updateStats();
+                this.saveSettings();
+            }
+
+            switchToWork() {
+                this.isWorkSession = true;
+                this.currentTime = this.workDuration;
+                this.initialTime = this.workDuration;
+                this.sessionType.innerHTML = '<span class="mode-indicator mode-work"></span>Work Session';
+                this.showNotification('Time to work! 🎯');
+                this.updateDisplay();
+                this.updateProgressRing();
+            }
+
+            switchToBreak() {
+                this.isWorkSession = false;
+                this.currentTime = this.breakDuration;
+                this.initialTime = this.breakDuration;
+                this.sessionType.innerHTML = '<span class="mode-indicator mode-break"></span>Short Break';
+                this.showNotification('Time for a break! ☕');
+                this.updateDisplay();
+                this.updateProgressRing();
+            }
+
+            switchToLongBreak() {
+                this.isWorkSession = false;
+                this.currentTime = this.longBreakDuration;
+                this.initialTime = this.longBreakDuration;
+                this.sessionType.innerHTML = '<span class="mode-indicator mode-long-break"></span>Long Break';
+                this.showNotification('Time for a long break! 🌟');
+                this.updateDisplay();
+                this.updateProgressRing();
+            }
+
+            updateDisplay() {
+                const minutes = Math.floor(this.currentTime / 60);
+                const seconds = this.currentTime % 60;
+                this.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Update document title
+                document.title = `${this.timerDisplay.textContent} - Pomodoro Focus`;
+            }
+
+            updateProgressRing() {
+                const circumference = 2 * Math.PI * 90;
+                const progress = (this.initialTime - this.currentTime) / this.initialTime;
+                const offset = circumference - (progress * circumference);
+                this.progressCircle.style.strokeDashoffset = offset;
+            }
+
+            updateStats() {
+                this.completedSessionsEl.textContent = this.completedSessions;
+                this.currentStreakEl.textContent = this.currentStreak;
+                
+                const hours = Math.floor(this.totalTimeWorked / 3600);
+                const minutes = Math.floor((this.totalTimeWorked % 3600) / 60);
+                this.totalTimeEl.textContent = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+            }
+
+            showNotification(message) {
+                this.notification.textContent = message;
+                this.notification.classList.add('show');
+                setTimeout(() => {
+                    this.notification.classList.remove('show');
+                }, 3000);
+            }
+
+            playNotificationSound() {
+                // Create audio context for notification sound
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            }
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            new PomodoroTimer();
+        });
+    </script>
+</body>
+</html>
