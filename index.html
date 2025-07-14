@@ -107,28 +107,30 @@
             line-height: 1.5;
         }
 
-        .coming-soon {
-            opacity: 0.6;
-            cursor: not-allowed;
-            position: relative;
-        }
-
-        .coming-soon:hover {
-            transform: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .coming-soon::after {
-            content: 'Próximamente';
+        .project-tag {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: #e74c3c;
-            color: white;
             padding: 5px 10px;
             border-radius: 20px;
             font-size: 0.7em;
             font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .tag-done {
+            background: #27ae60;
+            color: white;
+        }
+
+        .tag-mock {
+            background: #f39c12;
+            color: white;
+        }
+
+        .tag-beta {
+            background: #3498db;
+            color: white;
         }
 
         @media (max-width: 600px) {
@@ -154,6 +156,7 @@
         
         <div class="projects-grid">
             <a href="pomodoro.html" class="project-card">
+                <span class="project-tag tag-done">Done</span>
                 <span class="project-icon">🍅</span>
                 <h2 class="project-title">Pomodoro</h2>
                 <p class="project-description">
@@ -163,6 +166,7 @@
             </a>
 
             <a href="delegate.html" class="project-card">
+                <span class="project-tag tag-mock">Mock</span>
                 <span class="project-icon">📋</span>
                 <h2 class="project-title">Delegar Acceso Logístico</h2>
                 <p class="project-description">
@@ -171,14 +175,15 @@
                 </p>
             </a>
 
-            <div class="project-card coming-soon">
+            <a href="nodebroadcast.html" class="project-card">
+                <span class="project-tag tag-beta">Beta</span>
                 <span class="project-icon">🔗</span>
                 <h2 class="project-title">Node Broadcast</h2>
                 <p class="project-description">
                     Sistema de broadcasting en tiempo real usando Node.js. 
                     Permite comunicación instantánea entre múltiples clientes.
                 </p>
-            </div>
+            </a>
         </div>
     </div>
 </body>
