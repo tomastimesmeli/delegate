@@ -2,354 +2,184 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Driver App Flow - Prototipo Final</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Proyectos</title>
     <style>
-        body { font-family: 'Roboto', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-        .app-bg { background-color: #F8F9FA; }
-        .header-yellow { background-color: #FFE000; }
-        .primary-blue-text { color: #0078FF; }
-        .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05); border: 1px solid #e5e7eb; overflow: hidden; transition: all 0.3s ease; }
-        .card.hidden-by-filter { max-height: 0; opacity: 0; margin-bottom: 0 !important; border: none; padding: 0; }
-        .card.disabled { opacity: 0.6; background-color: #f1f5f9; }
-        .midnight-route { background-image: linear-gradient(45deg, #2d3748 25%, #4a5568 25%, #4a5568 50%, #2d3748 50%, #2d3748 75%, #4a5568 75%, #4a5568 100%); background-size: 56.57px 56.57px; color: white; }
-        .midnight-route .text-gray-600, .midnight-route .text-gray-500 { color: #cbd5e0; }
-        .swipe-container { background-color: #e9ecef; border-radius: 9999px; position: relative; overflow: hidden; user-select: none; cursor: grab; }
-        .swipe-container.accepted, .btn-cancel { background-color: #22c55e; cursor: pointer; }
-        .swipe-container.disabled { background-color: #9ca3af; cursor: not-allowed; }
-        .swipe-handle { background-color: white; border-radius: 50%; height: 44px; width: 44px; position: absolute; top: 2px; left: 2px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 10; }
-        .swipe-text { position: relative; z-index: 5; color: #333; font-weight: 500; }
-        .swipe-container.accepted .swipe-text, .btn-cancel .swipe-text { color: white; }
-        .swipe-container.disabled .swipe-text { color: #e5e7eb; }
-        .sort-button-active { background-color: #343a40; color: white; }
-        .tab-active { background-color: #343a40; color: white; border-radius: 9999px; }
-        /* Toast & Modals */
-        .toast { position: fixed; top: 90px; left: 50%; transform: translateX(-50%); padding: 12px 20px; border-radius: 9999px; font-weight: 600; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; animation: slideInDown 0.5s forwards, fadeOut 0.5s 2.5s forwards; }
-        .modal-overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-        .modal-overlay.visible { opacity: 1; pointer-events: auto; }
-        .modal-box { background: white; padding: 24px; border-radius: 16px; width: 90%; max-width: 350px; transform: scale(0.95); transition: transform 0.3s; }
-        .modal-overlay.visible .modal-box { transform: scale(1); }
-        .fullscreen-coachmark { position: fixed; inset: 0; background-color: rgba(0,0,0,0.8); z-index: 2500; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding: 2rem; cursor: pointer; }
-        /* Celebration */
-        .celebration-overlay { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(255,224,0,0.8) 0%, rgba(255,224,0,0) 70%); opacity: 0; transition: all 0.5s ease-out; pointer-events: none; }
-        .celebration-overlay.visible { opacity: 1; pointer-events: auto; animation: shrinkToHeader 1s 1.5s forwards; }
-        .celebration-content { text-align: center; color: #343a40; animation: popIn 0.5s forwards; }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes shrinkToHeader { from { inset: 0; background-color: rgba(255,224,0,0.8); } to { top: 0; left: 0; right: 0; height: 52px; background-color: transparent; } }
-        /* Accordion */
-        .accordion-header { background-color: #f1f5f9; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: white; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .project-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .project-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .project-description {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .coming-soon {
+            opacity: 0.6;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .coming-soon:hover {
+            transform: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .coming-soon::after {
+            content: 'Próximamente';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
-<body class="app-bg">
-
-    <div id="app-container" class="max-w-sm mx-auto bg-white min-h-screen shadow-2xl flex flex-col">
+<body>
+    <div class="container">
+        <h1>Mis Proyectos</h1>
+        <p class="subtitle">Herramientas y aplicaciones que he desarrollado</p>
         
-        <header id="main-header" class="header-yellow p-4 shadow-md flex justify-between items-center sticky top-0 z-30">
-            <div>
-                <h1 class="text-xl font-bold">Ofertas disponibles</h1>
-                <p id="header-date" class="text-sm font-semibold text-gray-700"></p>
-            </div>
-            <div class="text-sm font-semibold p-2 rounded-lg bg-white/50 flex items-center space-x-1">
-                <i data-lucide="clock" class="w-4 h-4"></i><span>08:56</span>
-            </div>
-        </header>
+        <div class="projects-grid">
+            <a href="pomodoro.html" class="project-card">
+                <span class="project-icon">🍅</span>
+                <h2 class="project-title">Pomodoro</h2>
+                <p class="project-description">
+                    Aplicación de productividad basada en la técnica Pomodoro. 
+                    Gestiona tu tiempo con intervalos de trabajo y descanso.
+                </p>
+            </a>
 
-        <div id="status-header" class="hidden bg-gray-800 text-white p-2 sticky top-0 z-30 text-center shadow-lg">
-            <div class="w-full bg-gray-600 rounded-full h-2.5 mb-1"><div id="progress-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 0%"></div></div>
-            <p id="status-text" class="text-xs font-semibold"></p>
+            <a href="delegate.html" class="project-card">
+                <span class="project-icon">📋</span>
+                <h2 class="project-title">Delegar Acceso Logístico</h2>
+                <p class="project-description">
+                    Sistema para gestionar y delegar accesos logísticos de manera 
+                    eficiente y segura.
+                </p>
+            </a>
+
+            <div class="project-card coming-soon">
+                <span class="project-icon">🔗</span>
+                <h2 class="project-title">Node Broadcast</h2>
+                <p class="project-description">
+                    Sistema de broadcasting en tiempo real usando Node.js. 
+                    Permite comunicación instantánea entre múltiples clientes.
+                </p>
+            </div>
         </div>
-
-        <main id="main-content" class="flex-grow pb-24">
-            <div id="disponibles-view">
-                <nav class="flex justify-around p-3 bg-white border-b"><button onclick="selectDay('vie')" class="day-tab tab-active text-sm py-1 px-3" data-day="vie">Vie</button><button onclick="selectDay('sab')" class="day-tab text-sm py-1 px-3" data-day="sab">Sáb</button><button onclick="selectDay('dom')" class="day-tab text-sm py-1 px-3" data-day="dom">Dom</button><button onclick="selectDay('lun')" class="day-tab text-sm py-1 px-3" data-day="lun">Lun</button></nav>
-                <div class="p-4 app-bg">
-                    <div class="flex justify-between items-center mb-4"><span class="text-sm font-semibold text-gray-600">Ordenar por:</span><div class="flex items-center rounded-full p-1 bg-gray-200"><button id="sort-horario" onclick="sortRoutes('time')" class="sort-button sort-button-active text-xs font-bold py-1 px-3 rounded-full">Horario</button><button id="sort-tarifa" onclick="sortRoutes('fare')" class="sort-button text-xs font-bold py-1 px-3 rounded-full">Tarifa</button></div></div>
-                    <div class="mb-4"><label for="distance-slider" class="block text-sm font-semibold text-gray-600 mb-1">Distancia máxima: <span id="distance-value">50</span> km</label><input id="distance-slider" type="range" min="1" max="50" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"></div>
-                    <div id="routes-list" class="space-y-5"></div>
-                </div>
-            </div>
-            <div id="confirmados-view" class="hidden p-4"><h1 class="text-2xl font-bold mb-2">Tus Rutas Confirmadas</h1><div id="confirmed-routes-list" class="space-y-4"></div><div id="monthly-total" class="mt-6 p-4 bg-gray-100 rounded-lg text-center"></div></div>
-        </main>
-
-        <footer class="fixed bottom-0 left-0 right-0 max-w-sm mx-auto bg-white border-t z-40"><div class="flex justify-around items-center h-16"><a href="#" class="nav-link text-center text-gray-600" data-view="activo"><i data-lucide="activity" class="mx-auto w-6 h-6"></i><span class="text-xs">Activo</span></a><a href="#" class="nav-link text-center primary-blue-text" data-view="disponibles"><i data-lucide="layout-grid" class="mx-auto w-6 h-6"></i><span class="text-xs font-bold">Disponibles</span></a><a href="#" class="nav-link text-center text-gray-600" data-view="confirmados"><i data-lucide="calendar-check" class="mx-auto w-6 h-6"></i><span class="text-xs">Confirmados</span></a><a href="#" class="nav-link text-center text-gray-600" data-view="mas"><i data-lucide="menu" class="mx-auto w-6 h-6"></i><span class="text-xs">Más</span></a></div></footer>
-        
-        <div id="toast-container"></div>
-        <div id="confirmation-modal" class="modal-overlay"><div class="modal-box"><h2 class="text-xl font-bold mb-2">¿Estás seguro?</h2><p id="modal-text" class="text-gray-600 mb-6"></p><div class="flex justify-end gap-3"><button onclick="closeModal()" class="py-2 px-5 rounded-lg bg-gray-200 font-semibold">No, volver</button><button id="modal-confirm-btn" class="py-2 px-5 rounded-lg bg-red-500 text-white font-semibold">Sí, cancelar</button></div></div></div>
-        <div id="celebration" class="celebration-overlay"><div class="celebration-content"><h1 class="text-5xl font-bold mb-4">¡BOOSTER!</h1><p id="celebration-text" class="text-2xl"></p></div></div>
-        <div id="fullscreen-coachmark" class="fullscreen-coachmark hidden" onclick="this.classList.add('hidden')"><p id="coachmark-text" class="text-2xl font-bold"></p></div>
     </div>
-
-    <script>
-        const appState = { routes: {}, dailyProgress: {}, currentSort: 'time', currentDay: 'vie', currentView: 'disponibles' };
-        const initialRoutes = {
-            vie: [
-                { id: 1, start: 8, end: 10, hours: 2, fare: 250, node: 'SP Moema', dist: 3, details: 'Parte 1 de 2.', comboId: 'moema-combo' },
-                { id: 2, start: 10, end: 12, hours: 2, fare: 260, node: 'SP Moema', dist: 3, details: 'Parte 2 de 2.', comboId: 'moema-combo' },
-                { id: 3, start: 14, end: 18, hours: 4, fare: 680, node: 'SP Itaim Bibi', dist: 5, dynamic: true, details: 'Tarifa dinámica' },
-                { id: 4, start: 12.5, end: 13.5, hours: 1, fare: 150, node: 'Mc Jardins', dist: 4, details: 'Locker', visited: true, icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/McDonald%27s_Golden_Arches.svg/238px-McDonald%27s_Golden_Arches.svg.png', locker: true },
-                { id: 5, start: 20, end: 23, hours: 3, fare: 450, node: 'SP Pinheiros', dist: 6, midnight: true, details: 'Entrega en lockers.', canSleep: true },
-                { id: 6, start: 9, end: 11, hours: 2, fare: 220, node: 'SVC Guarulhos', dist: 25, details: 'Dispatch Express', coachmark: 'Este nodo despacha sus rutas en menos de 5 minutos.', speed: true },
-                { id: 7, start: 16, end: 17, hours: 1, fare: 120, node: 'SP Itaim Bibi', dist: 5, details: 'Ruta "Coleta ao SVC" (sin entregas)' },
-                { id: 8, start: 18, end: 20, hours: 2, fare: 280, node: 'SP Vila Madalena', dist: 7, details: 'Alta demanda en zona de bares.' },
-                { id: 9, start: 7, end: 8, hours: 1, fare: 130, node: 'SP Paulista', dist: 5, details: 'Ruta de mañana, alta prioridad.' },
-                { id: 10, start: 13, end: 16, hours: 3, fare: 400, node: 'SP Morumbi', dist: 12, details: 'Entregas residenciales.' },
-                { id: 11, start: 11, end: 12, hours: 1, fare: 110, node: 'SVC Congonhas', dist: 4, details: 'Dispatch Express', speed: true, coachmark: 'Este nodo despacha sus rutas en menos de 5 minutos.' }
-            ],
-            sab: [ { id: 12, start: 9, end: 11, hours: 2, fare: 240, node: 'SP Moema', dist: 3, details: 'Alta demanda de Sábado.', locker: true }, { id: 13, start: 13, end: 17, hours: 4, fare: 700, node: 'SP Jardins', dist: 4, details: 'Ruta de fin de semana.' }],
-            dom: [ { id: 15, start: 8, end: 11, hours: 3, fare: 350, node: 'SP Ibirapuera', dist: 5, details: 'Entregas AM en el parque.' }, { id: 16, start: 9, end: 12, hours: 3, fare: 360, node: 'SP Liberdade', dist: 8, details: 'Entregas AM en feria.' }],
-            lun: [ { id: 14, start: 7, end: 9, hours: 2, fare: 280, node: 'SVC Guarulhos', dist: 25, details: 'Inicio de semana express.' }]
-        };
-        const boosters = {
-            vie: { text: "Acepta 6+ horas hoy y gana <span class='font-bold'>R$100</span> adicionales.", goal: 6, reward: "¡Ganaste R$100 extra!" },
-            sab: { text: "Toma una ruta <span class='font-bold'>Locker</span> primero y gana <span class='font-bold'>R$100</span>.", locker: true, reward: "¡Ganaste R$100 por ruta Locker!" },
-            dom: { text: "Entrega rutas AM para <span class='font-bold'>2X Puntos</span> y <span class='font-bold'>preferencia de barrio</span> <i data-lucide='map-pin' class='inline-block w-4 h-4'></i>.", am: true, reward: "¡Ganaste 2X Puntos!" }
-        };
-
-        function initializeRoutes() {
-            appState.routes = JSON.parse(JSON.stringify(initialRoutes));
-            Object.keys(initialRoutes).forEach(day => {
-                appState.dailyProgress[day] = { hours: 0, boosterAchieved: false, firstRouteIsLocker: false };
-                appState.routes[day].forEach(r => r.status = 'available');
-            });
-        }
-
-        function createCard(route, isCombo = false, comboRoutes = []) {
-            const card = document.createElement('div');
-            const status = route.status || 'available';
-            card.className = `card ${status !== 'available' ? 'disabled' : ''} ${route.midnight ? 'midnight-route' : ''}`;
-            const totalFare = isCombo ? comboRoutes.reduce((s, r) => s + r.fare, 0) : route.fare;
-            const totalHours = isCombo ? comboRoutes.reduce((s, r) => s + r.hours, 0) : route.hours;
-            card.dataset.time = route.start; card.dataset.fare = totalFare; card.dataset.dist = route.dist;
-            
-            let fareHtml = `<p class="text-xl font-bold">R$ ${route.fare}</p>`;
-            if (route.dynamic) fareHtml = `<p class="text-xl font-bold flex items-center gap-2">R$ ${route.fare} <span class="text-2xl">🤑</span></p>`;
-            
-            let detailsHtml = `<span>${route.details}</span>`;
-            if (route.canSleep) detailsHtml += `<span class="text-2xl ml-2" title="Puedes dormir los paquetes en tu casa">😴</span>`;
-            if (route.speed) detailsHtml = `<span class="flex items-center gap-1">⚡ ${route.details}</span>`;
-            if (route.coachmark) detailsHtml += `<div class="relative inline-block"><i data-lucide="help-circle" class="w-4 h-4 text-blue-500 cursor-pointer ml-2" onclick="showCoachmark(event, '${route.coachmark}')"></i></div>`;
-
-            let mainContent;
-            if (isCombo) {
-                mainContent = `<div class="p-4"><h3 class="font-bold text-lg text-blue-600">🚀 Combo Doble Turno!</h3><p class="text-sm text-gray-500">Total: <span class="font-bold">R$ ${totalFare}</span> en ${totalHours} hs.</p></div><div class="p-4 border-t space-y-2">${comboRoutes.map(r => `<div class="flex justify-between items-center"><div><p class="font-semibold">${r.details}</p><p class="text-sm text-gray-500">${formatTime(r.start)} - ${formatTime(r.end)} (${r.hours} hs)</p></div><p class="font-bold">R$ ${r.fare}</p></div>`).join('<hr class="my-2 border-gray-200">')}</div>`;
-            } else {
-                let nodeHtml = route.icon ? `<div class="flex items-center gap-2"><img src="${route.icon}" class="w-5 h-5">${route.node}</div>` : route.node;
-                mainContent = `<div class="p-4"><div class="flex justify-between items-start"><div>${fareHtml}<p class="text-gray-600">${route.hours} hs • ${formatTime(route.start)} - ${formatTime(route.end)}</p></div><div class="text-right"><p class="font-semibold">${nodeHtml}</p><div class="flex items-center text-sm ${route.dist > 20 ? 'text-red-500' : 'text-gray-500'}"><i data-lucide="map-pin" class="w-4 h-4 mr-1"></i>a ${route.dist} km</div></div></div><p class="text-xs text-gray-500 mt-2 flex justify-between items-center">${detailsHtml}</p></div>`;
-            }
-            
-            let actionHtml;
-            if (status === 'available') {
-                actionHtml = `<div class="swipe-container" data-route-id="${route.id}" ${isCombo ? `data-combo-id="${route.comboId}"` : ''}><div class="swipe-handle"><i data-lucide="chevron-right"></i></div><div class="swipe-text text-center py-3.5">Deslizar para aceptar ${isCombo ? 'COMBO' : ''}</div></div>`;
-            } else {
-                const text = status === 'accepted' ? 'Aceptada (Cancelar)' : 'Horario superpuesto';
-                const actionClass = status === 'accepted' ? 'btn-cancel accepted' : 'disabled';
-                actionHtml = `<div class="swipe-container ${actionClass}" ${status === 'accepted' ? `onclick="openCancelModal('${route.id}', ${isCombo})"` : ''}><div class="swipe-text text-center py-3.5">${text}</div></div>`;
-            }
-            card.innerHTML = `${mainContent}<div class="p-2 bg-gray-50">${actionHtml}</div>`;
-            return card;
-        }
-
-        function renderRoutes() {
-            const container = document.getElementById('routes-list'); container.innerHTML = '';
-            const booster = boosters[appState.currentDay];
-            const boosterCard = document.createElement('div'); boosterCard.className = 'card !bg-blue-500 text-white p-4 flex items-center space-x-4'; boosterCard.innerHTML = `<i data-lucide="award" class="w-10 h-10 flex-shrink-0"></i><div><h3 class="font-bold">BOOSTER DEL DÍA</h3><p class="text-sm">${booster.text}</p></div>`; container.appendChild(boosterCard);
-            
-            const routesForDay = appState.routes[appState.currentDay] || [];
-            if (routesForDay.length === 0) { container.innerHTML += '<p class="text-center text-gray-500 py-8">No hay ofertas disponibles.</p>'; return; }
-            const processedIds = new Set(); const elementsToRender = [];
-            routesForDay.forEach(route => {
-                if (processedIds.has(route.id)) return;
-                if (route.comboId) { const comboRoutes = routesForDay.filter(r => r.comboId === route.comboId); comboRoutes.forEach(r => processedIds.add(r.id)); elementsToRender.push(createCard(route, true, comboRoutes)); } else { processedIds.add(route.id); elementsToRender.push(createCard(route)); }
-            });
-            sortAndAppend(elementsToRender); lucide.createIcons(); initSwipeActions(); filterRoutesByDistance();
-        }
-        
-        function sortAndAppend(elements) {
-            const container = document.getElementById('routes-list'); const booster = container.firstChild; container.innerHTML = ''; if (booster) container.appendChild(booster);
-            elements.sort((a, b) => appState.currentSort === 'time' ? a.dataset.time - b.dataset.time : b.dataset.fare - a.dataset.fare);
-            elements.forEach(el => container.appendChild(el));
-        }
-        
-        function renderConfirmedRoutes() {
-            const container = document.getElementById('confirmed-routes-list'); container.innerHTML = '';
-            const acceptedByDay = Object.entries(appState.routes).reduce((acc, [day, routes]) => {
-                const accepted = routes.filter(r => r.status === 'accepted');
-                if (accepted.length > 0) acc[day] = accepted;
-                return acc;
-            }, {});
-
-            if (Object.keys(acceptedByDay).length === 0) { container.innerHTML = '<p class="text-center text-gray-500 py-8">Aún no has confirmado ninguna ruta.</p>'; document.getElementById('monthly-total').innerHTML = ''; return; }
-            
-            let monthlyTotal = 0;
-            Object.entries(acceptedByDay).forEach(([day, routes]) => {
-                const dayTotal = routes.reduce((sum, r) => sum + r.fare, 0);
-                monthlyTotal += dayTotal;
-                const dayName = {vie: 'Viernes', sab: 'Sábado', dom: 'Domingo', lun: 'Lunes'}[day];
-                const isCurrentDay = day === appState.currentDay;
-                
-                const accordion = document.createElement('div');
-                accordion.className = 'border rounded-lg overflow-hidden';
-                accordion.innerHTML = `
-                    <button onclick="this.nextElementSibling.classList.toggle('!max-h-screen')" class="accordion-header w-full p-4 text-left flex justify-between items-center">
-                        <div><p class="font-bold">${dayName}</p><p class="text-sm text-gray-500">${routes.length} rutas</p></div>
-                        <span class="font-bold text-green-600">R$ ${dayTotal}</span>
-                    </button>
-                    <div class="accordion-content ${isCurrentDay ? '!max-h-screen' : ''}">
-                        ${routes.map(r => `<div class="p-4 border-b flex justify-between items-center"><div><p>${formatTime(r.start)} - ${formatTime(r.end)}</p><p class="text-sm text-gray-500">${r.node}</p></div><button onclick="openCancelModal('${r.id}')" class="text-red-500 font-semibold text-sm">Cancelar</button></div>`).join('')}
-                    </div>`;
-                container.appendChild(accordion);
-            });
-            document.getElementById('monthly-total').innerHTML = `<p class="text-gray-600">Total proyectado del mes</p><p class="text-2xl font-bold">R$ ${monthlyTotal}</p>`;
-        }
-
-        function handleRouteUpdate(isAccept, routeId, comboId) {
-            const dayOfRoute = comboId ? appState.currentDay : Object.keys(appState.routes).find(day => appState.routes[day].some(r => r.id == routeId));
-            if (!dayOfRoute) return;
-
-            const routesForDay = appState.routes[dayOfRoute];
-            let affectedRoutes = comboId ? routesForDay.filter(r => r.comboId === comboId) : [routesForDay.find(r => r.id == routeId)];
-            
-            affectedRoutes.forEach(r => r.status = isAccept ? 'accepted' : 'available');
-            
-            const acceptedToday = routesForDay.filter(r => r.status === 'accepted');
-            appState.dailyProgress[dayOfRoute].hours = acceptedToday.reduce((s, r) => s + r.hours, 0);
-            
-            routesForDay.filter(r => r.status !== 'accepted').forEach(route => {
-                const isOverlapping = acceptedToday.some(acc => route.start < acc.end && route.end > acc.start);
-                route.status = isOverlapping ? 'overlap' : 'available';
-            });
-            
-            const booster = boosters[dayOfRoute];
-            const progress = appState.dailyProgress[dayOfRoute];
-            let boosterAchievedNow = false;
-            if (booster.goal && progress.hours >= booster.goal) boosterAchievedNow = true;
-            if (booster.locker && acceptedToday.length > 0 && acceptedToday[0].locker) boosterAchievedNow = true;
-            if (booster.am && acceptedToday.some(r => r.end <= 12)) boosterAchievedNow = true;
-
-            if (isAccept) {
-                showToast(`🎉 ¡Ruta aceptada!`);
-                if (boosterAchievedNow && !progress.boosterAchieved) { triggerCelebration(booster.reward); progress.boosterAchieved = true; }
-            } else {
-                showToast(`Ruta cancelada.`, 'bg-gray-700');
-                progress.boosterAchieved = false;
-            }
-            
-            updateStatusHeader();
-            if (appState.currentView === 'disponibles') renderRoutes();
-            else renderConfirmedRoutes();
-        }
-
-        function openCancelModal(routeId) {
-            const modal = document.getElementById('confirmation-modal');
-            const route = Object.values(appState.routes).flat().find(r => r.id == routeId);
-            document.getElementById('modal-text').textContent = `Esto cancelará la ruta de ${formatTime(route.start)} a ${formatTime(route.end)} en ${route.node}.`;
-            modal.querySelector('#modal-confirm-btn').onclick = () => { handleRouteUpdate(false, route.id, route.comboId); closeModal(); };
-            modal.classList.add('visible');
-        }
-        function closeModal() { document.getElementById('confirmation-modal').classList.remove('visible'); }
-
-        function triggerCelebration(text) {
-            document.getElementById('celebration-text').textContent = text;
-            const celebration = document.getElementById('celebration');
-            celebration.classList.add('visible');
-            setTimeout(() => celebration.classList.remove('visible'), 2500);
-        }
-
-        function updateStatusHeader() {
-            const statusHeader = document.getElementById('status-header');
-            const mainHeader = document.getElementById('main-header');
-            const progress = appState.dailyProgress[appState.currentDay];
-            if (progress && progress.hours > 0 && appState.currentView === 'disponibles') { statusHeader.classList.remove('hidden'); mainHeader.classList.add('hidden'); } 
-            else { statusHeader.classList.add('hidden'); mainHeader.classList.remove('hidden'); return; }
-            
-            const booster = boosters[appState.currentDay];
-            const barWidth = booster.goal ? Math.min((progress.hours / booster.goal) * 100, 100) : 0;
-            document.getElementById('progress-bar').style.width = `${barWidth}%`;
-            
-            if (progress.boosterAchieved) { document.getElementById('status-text').textContent = `(${progress.hours}hs) ¡BOOSTER CONSEGUIDO! 🥳`; } 
-            else if (booster.goal) { document.getElementById('status-text').textContent = `Jornada: ${progress.hours}hs. ¡Faltan ${(booster.goal - progress.hours).toFixed(1).replace('.0','')}hs para el booster!`; }
-            else { document.getElementById('status-text').textContent = `Jornada: ${progress.hours}hs.`; }
-        }
-        
-        function showToast(message, bgColor = 'bg-green-500') { const t = document.createElement('div'); t.className = `toast ${bgColor}`; t.textContent = message; document.getElementById('toast-container').appendChild(t); setTimeout(() => t.remove(), 3000); }
-        function showCoachmark(event, text) { event.stopPropagation(); document.getElementById('coachmark-text').textContent = text; document.getElementById('fullscreen-coachmark').classList.remove('hidden'); }
-        
-        function selectDay(day) {
-            appState.currentDay = day;
-            document.querySelectorAll('.day-tab').forEach(t => { t.classList.remove('tab-active'); if(t.dataset.day === day) t.classList.add('tab-active'); });
-            document.getElementById('header-date').textContent = {vie: 'Viernes, 11 de Julio', sab: 'Sábado, 12 de Julio', dom: 'Domingo, 13 de Julio', lun: 'Lunes, 14 de Julio'}[day];
-            updateStatusHeader();
-            renderRoutes();
-        }
-        function sortRoutes(criteria) { appState.currentSort = criteria; document.querySelectorAll('.sort-button').forEach(b => b.classList.toggle('sort-button-active', b.id.includes(criteria))); renderRoutes(); }
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault(); 
-                const view = link.dataset.view; 
-                appState.currentView = view;
-                
-                const mainHeaderTitle = document.querySelector('#main-header h1');
-                const mainHeaderDate = document.getElementById('header-date');
-                const clock = document.querySelector('#main-header > div:last-child');
-
-                document.querySelectorAll('.nav-link').forEach(l => {l.classList.remove('primary-blue-text'); l.querySelector('span').classList.remove('font-bold');});
-                link.classList.add('primary-blue-text'); link.querySelector('span').classList.add('font-bold');
-                
-                document.getElementById('disponibles-view').classList.toggle('hidden', view !== 'disponibles'); 
-                document.getElementById('confirmados-view').classList.toggle('hidden', view !== 'confirmados');
-                
-                if (view === 'confirmados') {
-                    mainHeaderTitle.textContent = 'Rutas Confirmadas';
-                    mainHeaderDate.classList.add('hidden');
-                    clock.classList.add('hidden');
-                    renderConfirmedRoutes();
-                } else {
-                    mainHeaderTitle.textContent = 'Ofertas disponibles';
-                    mainHeaderDate.classList.remove('hidden');
-                    clock.classList.remove('hidden');
-                }
-                
-                updateStatusHeader();
-            });
-        });
-
-        document.getElementById('distance-slider').addEventListener('input', (e) => {
-            document.getElementById('distance-value').textContent = e.target.value;
-            filterRoutesByDistance();
-        });
-
-        function filterRoutesByDistance() {
-            const maxDist = document.getElementById('distance-slider').value;
-            document.querySelectorAll('#routes-list .card').forEach(card => {
-                if (card.dataset.dist) {
-                    card.classList.toggle('hidden-by-filter', parseInt(card.dataset.dist) > maxDist);
-                }
-            });
-        }
-
-        function formatTime(time) { const h = Math.floor(time); const m = (time % 1) * 60; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`; }
-        function initSwipeActions() {
-            document.querySelectorAll('.swipe-container').forEach(container => {
-                if(container.classList.contains('disabled') || container.classList.contains('accepted')) return;
-                let isDragging = false, startX = 0, currentX = 0;
-                const handle = container.querySelector('.swipe-handle');
-                const endDrag = () => { if (!isDragging) return; isDragging = false; document.removeEventListener('mousemove', drag); document.removeEventListener('mouseup', endDrag); if (currentX > container.offsetWidth * 0.8) { handleRouteUpdate(true, container.dataset.routeId, container.dataset.comboId); } else { handle.style.transition = 'transform 0.3s ease'; handle.style.transform = 'translateX(0px)'; }};
-                const drag = (e) => { if (!isDragging) return; currentX = (e.pageX || e.touches[0].pageX) - startX; if (currentX < 0) currentX = 0; if (currentX > container.offsetWidth - handle.offsetWidth) currentX = container.offsetWidth - handle.offsetWidth; handle.style.transform = `translateX(${currentX}px)`; };
-                const startDrag = (e) => {
-                    if (!handle) return;
-                    isDragging = true; startX = e.pageX || e.touches[0].pageX; handle.style.transition = 'none';
-                    document.addEventListener('mousemove', drag); document.addEventListener('mouseup', endDrag);
-                };
-                container.addEventListener('mousedown', startDrag);
-            });
-        }
-        initializeRoutes(); selectDay('vie');
-    </script>
 </body>
 </html>
