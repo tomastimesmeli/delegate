@@ -133,6 +133,29 @@
             color: white;
         }
 
+        .author-links {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-link {
+            color: #667eea;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .author-link:hover {
+            color: #764ba2;
+        }
+
+        .social-icon {
+            font-size: 1.1em;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
@@ -152,7 +175,17 @@
 <body>
     <div class="container">
         <h1>Tom's Playground</h1>
-        <p class="subtitle">Apps desarrolladas por Tomás Bermúdez</p>
+        <p class="subtitle">Apps desarrolladas por 
+            <span class="author-links">
+                <a href="slack://user?id=USHCCHU3B" class="author-link slack-link">
+                    <span class="social-icon">💬</span>
+                    Tomás Bermúdez
+                </a>
+                <a href="mailto:tomas.bermudez@mercadolibre.com" class="author-link">
+                    <span class="social-icon">📧</span>
+                </a>
+            </span>
+        </p>
         
         <div class="projects-grid">
             <a href="pomodoro.html" class="project-card">
